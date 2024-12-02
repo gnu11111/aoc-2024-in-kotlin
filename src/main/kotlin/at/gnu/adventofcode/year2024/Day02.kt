@@ -10,25 +10,13 @@ class Day02(input: List<String>) {
     fun part2(): Int =
         reports.count(::checkReportGracefully)
 
-    private fun checkReport(levels: List<Int>): Boolean {
-        var sign = 0
-        for (delta in levels.zipWithNext().map { it.second - it.first }) {
-            if (sign == 0)
-                sign = delta
-            else if ((sign > 0) && (delta < 0) || (sign < 0) && (delta > 0))
-                return false
-            if ((delta == 0) || (delta > 3) || (delta < -3))
-                return false
+    private fun checkReport(levels: List<Int>): Boolean =
+        levels.zipWithNext().map { it.second - it.first }.let { deltas ->
+            return ((deltas.all { it > 0 } || deltas.all { it < 0 }) && deltas.all { it in -3..3 })
         }
-        return true
-    }
 
-    private fun checkReportGracefully(levels: List<Int>): Boolean {
-        for (i in levels.indices)
-            if (checkReport(levels.filterIndexed { j, _ -> (j != i) }))
-                return true
-        return false
-    }
+    private fun checkReportGracefully(levels: List<Int>): Boolean =
+        levels.indices.any { i -> checkReport(levels.filterIndexed { j, _ -> (j != i) }) }
 
     companion object {
         const val RESOURCE = "/adventofcode/year2024/Day02.txt"
