@@ -5,18 +5,18 @@ class Day02(input: List<String>) {
     private val reports = input.map { report -> report.split(" ").map(String::toInt) }
 
     fun part1(): Int =
-        reports.count(::checkReport)
+        reports.count(::isReportValid)
 
     fun part2(): Int =
-        reports.count(::checkReportGracefully)
+        reports.count(::isReportValidWithDampener)
 
-    private fun checkReport(levels: List<Int>): Boolean =
+    private fun isReportValid(levels: List<Int>): Boolean =
         levels.zipWithNext().map { it.second - it.first }.let { deltas ->
             return ((deltas.all { it > 0 } || deltas.all { it < 0 }) && deltas.all { it in -3..3 })
         }
 
-    private fun checkReportGracefully(levels: List<Int>): Boolean =
-        levels.indices.any { i -> checkReport(levels.filterIndexed { j, _ -> (j != i) }) }
+    private fun isReportValidWithDampener(levels: List<Int>): Boolean =
+        levels.indices.any { i -> isReportValid(levels.filterIndexed { j, _ -> (j != i) }) }
 
     companion object {
         const val RESOURCE = "/adventofcode/year2024/Day02.txt"
