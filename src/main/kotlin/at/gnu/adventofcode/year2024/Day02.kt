@@ -2,7 +2,7 @@ package at.gnu.adventofcode.year2024
 
 class Day02(input: List<String>) {
 
-    private val reports = input.map { report -> report.split(" ").map { it.toInt() } }
+    private val reports = input.map { report -> report.split(" ").map(String::toInt) }
 
     fun part1(): Int =
         reports.count(::checkReport)
@@ -12,16 +12,13 @@ class Day02(input: List<String>) {
 
     private fun checkReport(levels: List<Int>): Boolean {
         var sign = 0
-        var last = levels.first()
-        for (level in levels.drop(1)) {
-            val delta = level - last
-            if ((sign == 0) && (delta != 0))
+        for (delta in levels.zipWithNext().map { it.second - it.first }) {
+            if (sign == 0)
                 sign = delta
-            else if (((sign > 0) && (delta < 0)) || ((sign < 0) && (delta > 0)))
+            else if ((sign > 0) && (delta < 0) || (sign < 0) && (delta > 0))
                 return false
             if ((delta == 0) || (delta > 3) || (delta < -3))
                 return false
-            last = level
         }
         return true
     }

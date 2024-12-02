@@ -1,6 +1,5 @@
-package adventofcode.year2024
+package at.gnu.adventofcode.year2024
 
-import at.gnu.adventofcode.year2024.Day02
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import kotlin.time.ExperimentalTime
