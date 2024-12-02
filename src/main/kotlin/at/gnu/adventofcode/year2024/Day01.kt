@@ -4,28 +4,14 @@ import kotlin.math.abs
 
 class Day01(lines: List<String>) {
 
-    private val locationIDs = lines.map { it.split("\\s+".toRegex()) }.map { it.first().toInt() to it.last().toInt() }
+    private val locationIDs = lines.map { it.split("\\s+".toRegex()) }
+        .map { it.first().toInt() to it.last().toInt() }.unzip()
 
+    fun part1(): Int =
+        (locationIDs.first.sorted() zip locationIDs.second.sorted()).sumOf { abs(it.first - it.second)  }
 
-    fun part1(): Int {
-        val left = locationIDs.map { it.first }.sorted()
-        val right = locationIDs.map { it.second }.sorted()
-        var bla = 0
-        for ((l1, l2) in left zip right) {
-            bla += abs(l2 - l1)
-        }
-        return bla
-    }
-
-    fun part2(): Int {
-        val left = locationIDs.map { it.first }.sorted()
-        val right = locationIDs.map { it.second }.sorted()
-        var bla = 0
-        for (l1 in left) {
-            bla += (l1 * right.count { it == l1 })
-        }
-        return bla
-    }
+    fun part2(): Int =
+        locationIDs.first.sorted().sumOf { left -> left * locationIDs.second.count { it == left } }
 
     companion object {
         const val RESOURCE = "/adventofcode/year2024/Day01.txt"
