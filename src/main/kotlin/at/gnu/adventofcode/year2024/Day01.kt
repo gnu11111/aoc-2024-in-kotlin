@@ -8,7 +8,7 @@ class Day01(lines: List<String>) {
         .map { it.first().toInt() to it.last().toInt() }.unzip()
 
     fun part1(): Int =
-        (locationIDs.first.sorted() zip locationIDs.second.sorted()).sumOf { abs(it.first - it.second)  }
+        (locationIDs.first.sorted() zip locationIDs.second.sorted()).sumOf { abs(it.first - it.second) }
 
     fun part2(): Int =
         locationIDs.first.sorted().sumOf { left -> left * locationIDs.second.count { it == left } }
