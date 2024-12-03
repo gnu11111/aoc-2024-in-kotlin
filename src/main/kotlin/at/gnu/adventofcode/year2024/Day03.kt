@@ -2,27 +2,25 @@ package at.gnu.adventofcode.year2024
 
 class Day03(private val memory: String) {
 
-    private val multiplication = """mul\((\d{1,3}),(\d{1,3})\)"""
-    private val switchOn = """(do)\(\)"""
-    private val switchOff = """(don't)\(\)"""
+    private val commands = """(mul)\((\d{1,3}),(\d{1,3})\)|(do)\(\)|(don't)\(\)""".toRegex()
 
     fun part1(): Long =
-        multiplication.toRegex().findAll(memory).fold(0L) { acc, parameters ->
-            val (number1, number2) = parameters.destructured
-            acc + (number1.toLong() * number2.toLong())
+        commands.findAll(memory).fold(0L) { acc, parameters ->
+            val (multiplication, number1, number2) = parameters.destructured
+            if (multiplication.isNotBlank()) (acc + (number1.toLong() * number2.toLong())) else acc
         }
 
-    fun part2(): Long {
-        var enabled = true
-        return "$multiplication|$switchOn|$switchOff".toRegex().findAll(memory).fold(0L) { acc, match ->
-            val (number1, number2, switchOn, switchOff) = match.destructured
+    fun part2(): Long =
+        commands.findAll(memory).fold(Pair(0L, true)) { acc, match ->
+            val result = acc.first
+            val enabled = acc.second
+            val (_, number1, number2, switchOn, switchOff) = match.destructured
             when {
-                switchOn.isNotBlank() -> { enabled = true; acc }
-                switchOff.isNotBlank() -> { enabled = false; acc }
-                else -> acc + if (enabled) (number1.toLong() * number2.toLong()) else 0L
+                switchOn.isNotBlank() -> result to true
+                switchOff.isNotBlank() -> result to false
+                else -> (result + if (enabled) (number1.toLong() * number2.toLong()) else 0L) to enabled
             }
-        }
-    }
+        }.first
 
     companion object {
         const val RESOURCE = "/adventofcode/year2024/Day03.txt"
