@@ -19,7 +19,7 @@ class Day03(private val memory: String) {
                 switchOn.isNotBlank() -> result to true
                 switchOff.isNotBlank() -> result to false
                 enabled -> (result + (number1.toLong() * number2.toLong())) to true
-                else -> result to enabled
+                else -> result to false
             }
         }.first
 
