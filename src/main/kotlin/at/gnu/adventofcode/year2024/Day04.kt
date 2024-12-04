@@ -2,42 +2,35 @@ package at.gnu.adventofcode.year2024
 
 class Day04(private val wordSearch: List<String>) {
 
-    fun part1(): Int {
-        var count = 0
-        for (y in wordSearch.indices)
-            for (x in wordSearch[y].indices)
-                if (wordSearch[y][x] == 'X') {
-                    count += xmasAtPosition(x, y, 1, 0)
-                    count += xmasAtPosition(x, y, -1, 0)
-                    count += xmasAtPosition(x, y, 0, 1)
-                    count += xmasAtPosition(x, y, 0, -1)
-                    count += xmasAtPosition(x, y, 1, 1)
-                    count += xmasAtPosition(x, y, 1, -1)
-                    count += xmasAtPosition(x, y, -1, 1)
-                    count += xmasAtPosition(x, y, -1, -1)
-                }
-        return count
-    }
+    private val directions = listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1, 1 to 1, 1 to -1, -1 to 1, -1 to -1)
 
-    fun part2(): Int {
-        var count = 0
-        for (y in wordSearch.indices)
-            for (x in wordSearch[y].indices)
-                if (wordSearch[y][x] == 'A')
-                    count += xMasAtPosition(x, y)
-        return count
-    }
-
-    private fun xmasAtPosition(startX: Int, startY: Int, dx: Int, dy: Int): Int {
-        for (i in XMAS.indices) {
-            val x = startX + (i * dx)
-            val y = startY + (i * dy)
-            if ((y < 0) || (y >= wordSearch.size) || (x < 0) || (x >= wordSearch[y].length)
-                || (wordSearch[y][x] != XMAS[i]))
-                return 0
+    fun part1(): Int =
+        wordSearch.indices.sumOf { y ->
+            wordSearch[y].indices.sumOf { x ->
+                if (wordSearch[y][x] == 'X')
+                    directions.sumOf { xmasAtPosition(x, y, it.first, it.second) }
+                else
+                    0
+            }
         }
-        return 1
-    }
+
+    fun part2(): Int =
+        wordSearch.indices.sumOf { y ->
+            wordSearch[y].indices.sumOf { x ->
+                if (wordSearch[y][x] == 'A')
+                    xMasAtPosition(x, y)
+                else
+                    0
+            }
+        }
+
+    private fun xmasAtPosition(startX: Int, startY: Int, dx: Int, dy: Int): Int =
+        if (XMAS.indices.all {
+            val x = startX + (it * dx)
+            val y = startY + (it * dy)
+            ((y >= 0) && (y < wordSearch.size) && (x >= 0) && (x < wordSearch[y].length)
+                    && (wordSearch[y][x] == XMAS[it]))
+        }) 1 else 0
 
     private fun xMasAtPosition(x: Int, y: Int): Int =
         when {
@@ -54,8 +47,8 @@ class Day04(private val wordSearch: List<String>) {
         }
 
     companion object {
-        const val XMAS = "XMAS"
         const val RESOURCE = "/adventofcode/year2024/Day04.txt"
+        const val XMAS = "XMAS"
     }
 }
 
