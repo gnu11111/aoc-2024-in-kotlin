@@ -24,7 +24,7 @@ class Day04(private val wordSearch: List<String>) {
         for (y in wordSearch.indices)
             for (x in wordSearch[y].indices)
                 if (wordSearch[y][x] == 'A')
-                    count += masAtPosition(x, y)
+                    count += xMasAtPosition(x, y)
         return count
     }
 
@@ -39,7 +39,7 @@ class Day04(private val wordSearch: List<String>) {
         return 1
     }
 
-    private fun masAtPosition(x: Int, y: Int): Int =
+    private fun xMasAtPosition(x: Int, y: Int): Int =
         when {
             ((y < 1) || (y >= wordSearch.size - 1) || (x < 1) || (x >= wordSearch[y].length - 1)) -> 0
             (((wordSearch[y + 1][x + 1]) == 'M') && ((wordSearch[y - 1][x + 1]) == 'M')
@@ -55,7 +55,6 @@ class Day04(private val wordSearch: List<String>) {
 
     companion object {
         const val XMAS = "XMAS"
-        const val MAS = "MAS"
         const val RESOURCE = "/adventofcode/year2024/Day04.txt"
     }
 }
