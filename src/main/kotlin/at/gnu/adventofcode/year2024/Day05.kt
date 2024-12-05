@@ -1,20 +1,20 @@
 package at.gnu.adventofcode.year2024
 
-class Day05(rules: List<String>, pages: List<String>) {
+class Day05(rules: List<String>, updates: List<String>) {
 
     private val rules = rules.map {
         val (page1, page2) = it.split("|")
         page1.toInt() to page2.toInt()
     }
 
-    private val pages = pages.map { it.split(",").map(String::toInt) }
+    private val updates = updates.map { it.split(",").map(String::toInt) }
 
 
     fun part1(): Int =
-        pages.sumOf { if (it.check()) it[it.size / 2] else 0 }
+        updates.sumOf { if (it.check()) it.middleNumber() else 0 }
 
     fun part2(): Int =
-        pages.sumOf { if (it.check()) 0 else it.reorder() }
+        updates.sumOf { if (it.check()) 0 else it.reorder().middleNumber() }
 
 
     private fun List<Int>.check(): Boolean =
@@ -24,18 +24,21 @@ class Day05(rules: List<String>, pages: List<String>) {
             (index1 < 0) || (index2 < 0) || (index1 < index2)
         }
 
-    private fun List<Int>.reorder(): Int {
+    private fun List<Int>.middleNumber(): Int =
+        this[size / 2]
+
+    private fun List<Int>.reorder(): List<Int> {
         val reorderedList = toMutableList()
         while (true) {
             for (rule in rules) {
                 val index1 = reorderedList.indexOf(rule.first)
                 val index2 = reorderedList.indexOf(rule.second)
                 if ((index1 >= 0) && (index2 >= 0) && (index1 > index2)) {
-                    var temp = reorderedList[index2]
+                    val temp = reorderedList[index2]
                     reorderedList[index2] = reorderedList[index1]
                     reorderedList[index1] = temp
                     if (reorderedList.check())
-                        return reorderedList[reorderedList.size / 2]
+                        return reorderedList
                 }
             }
         }
