@@ -32,19 +32,19 @@ class Day04(private val wordSearch: List<String>) {
                     && (wordSearch[y][x] == XMAS[it]))
         }) 1 else 0
 
-    private fun xMasAtPosition(x: Int, y: Int): Int =
-        when {
-            ((y < 1) || (y >= wordSearch.size - 1) || (x < 1) || (x >= wordSearch[y].length - 1)) -> 0
-            (((wordSearch[y + 1][x + 1]) == 'M') && ((wordSearch[y - 1][x + 1]) == 'M')
-                    && ((wordSearch[y - 1][x - 1]) == 'S') && ((wordSearch[y + 1][x - 1]) == 'S')) -> 1
-            (((wordSearch[y + 1][x + 1]) == 'S') && ((wordSearch[y - 1][x + 1]) == 'S')
-                    && ((wordSearch[y - 1][x - 1]) == 'M') && ((wordSearch[y + 1][x - 1]) == 'M')) -> 1
-            (((wordSearch[y + 1][x + 1]) == 'M') && ((wordSearch[y - 1][x + 1]) == 'S')
-                    && ((wordSearch[y - 1][x - 1]) == 'S') && ((wordSearch[y + 1][x - 1]) == 'M')) -> 1
-            (((wordSearch[y + 1][x + 1]) == 'S') && ((wordSearch[y - 1][x + 1]) == 'M')
-                    && ((wordSearch[y - 1][x - 1]) == 'M') && ((wordSearch[y + 1][x - 1]) == 'S')) -> 1
-            else -> 0
+    private fun xMasAtPosition(x: Int, y: Int): Int {
+        if ((y > 0) && (y < wordSearch.size - 1) && (x > 0) && (x < wordSearch[y].length - 1)) {
+            val letters = "MMSS"
+            for (i in letters.indices) {
+                if (((wordSearch[y + 1][x + 1]) == letters[i])
+                    && ((wordSearch[y - 1][x + 1]) == letters[(i + 1) % letters.length])
+                    && ((wordSearch[y - 1][x - 1]) == letters[(i + 2) % letters.length])
+                    && ((wordSearch[y + 1][x - 1]) == letters[(i + 3) % letters.length]))
+                    return 1
+            }
         }
+        return 0
+    }
 
     companion object {
         const val RESOURCE = "/adventofcode/year2024/Day04.txt"
