@@ -50,9 +50,9 @@ class Day05(rules: List<String>, updates: List<String>) {
 }
 
 fun main() {
-    val (rules, pages) = Day05::class.java.getResource(Day05.RESOURCE)!!.readText().trim().split("\n\n", "\r\n\r\n")
+    val (rules, updates) = Day05::class.java.getResource(Day05.RESOURCE)!!.readText().trim().split("\n\n", "\r\n\r\n")
         .map { it.split("\n", "\r\n") }
-    val day05 = Day05(rules, pages)
+    val day05 = Day05(rules, updates)
     println("Day05::part1 -> ${day05.part1()}")
     println("Day05::part2 -> ${day05.part2()}")
 }
