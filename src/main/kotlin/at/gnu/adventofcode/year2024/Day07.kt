@@ -15,9 +15,9 @@ class Day07(equations: List<String>) {
 
     private fun checkEquations(operators: Int = 2): Long {
         var sum = 0L
-        for ((result, parameters) in equations)
-            for (i in 0 until operators.toFloat().pow(parameters.size - 1).toInt())
-                if (result == parameters.evaluate(result, createOperators(i, parameters.size, operators))) {
+        for ((result, numbers) in equations)
+            for (i in 0 until operators.toFloat().pow(numbers.size - 1).toInt())
+                if (result == numbers.evaluate(result, createOperators(i, numbers.size, operators))) {
                     sum += result
                     break
                 }
@@ -38,15 +38,15 @@ class Day07(equations: List<String>) {
         return operators
     }
 
-    private fun List<Int>.evaluate(sum: Long, operators: List<Char>): Long {
+    private fun List<Int>.evaluate(max: Long, operators: List<Char>): Long {
         var result = first().toLong()
-        drop(1).zip(operators) { parameter, operator ->
+        drop(1).zip(operators) { number, operator ->
             when (operator) {
-                '+' -> result += parameter
-                '*' -> result *= parameter
-                else -> result = (result.toString() + parameter.toString()).toLong()
+                '+' -> result += number
+                '*' -> result *= number
+                else -> result = "$result$number".toLong()
             }
-            if (result > sum)
+            if (result > max)
                 return result
         }
         return result
