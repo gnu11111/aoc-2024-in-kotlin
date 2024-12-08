@@ -28,10 +28,10 @@ class Day07(equations: List<String>) {
         val operators = mutableListOf<Char>()
         var temp = i
         repeat(size) {
-            when {
-                ((temp % amount) == 0) -> operators += '+'
-                ((temp % amount) == 1) -> operators += '*'
-                else -> operators += '|'
+            operators += when {
+                ((temp % amount) == 0) -> '+'
+                ((temp % amount) == 1) -> '*'
+                else -> '|'
             }
             temp /= amount
         }
@@ -53,12 +53,12 @@ class Day07(equations: List<String>) {
     }
 
     companion object {
-        const val resource = "/adventofcode/year2024/Day07.txt"
+        const val RESOURCE = "/adventofcode/year2024/Day07.txt"
     }
 }
 
 fun main() {
-    val day07 = Day07(Day07::class.java.getResource(Day07.resource)!!.readText().trim().split("\n", "\r\n"))
+    val day07 = Day07(Day07::class.java.getResource(Day07.RESOURCE)!!.readText().trim().split("\n", "\r\n"))
     println("Day07::part1 -> ${day07.part1()}")
     println("Day07::part2 -> ${day07.part2()}")
 }
