@@ -8,27 +8,13 @@ class Day06(private val map: List<String>) {
     private var guardX = map[guardY].indexOf("^")
 
 
-    fun part1(): Int {
-        val visited = patrol()
-        return visited.size
-    }
+    fun part1(): Int =
+        patrol().size
 
-    fun part2(): Int {
-        val visited = patrol().keys
-        var sum = 0
-        for (cell in visited) {
-            val newMap = map.mapIndexed { y, line ->
-                line.mapIndexed { x, c ->
-                    if (!((x == guardX) && (y == guardY)) && (x == cell.first) && (y == cell.second)) '#' else c
-                }.joinToString("")
-            }
-            if (patrol(newMap).isEmpty())
-                sum++
-        }
-        return sum
-    }
+    fun part2(): Int =
+        patrol().keys.count { !((it.first == guardX) && (it.second == guardY)) && patrol(it).isEmpty() }
 
-    private fun patrol(map: List<String> = this.map): Map<Pair<Int, Int>, Direction> {
+    private fun patrol(obstacle: Pair<Int, Int> = -1 to -1): Map<Pair<Int, Int>, Direction> {
         var direction = Direction.NORTH
         var x = guardX
         var y = guardY
@@ -38,7 +24,7 @@ class Day06(private val map: List<String>) {
             val nextY = y + direction.y
             if (((nextX < 0) || (nextX >= map[y].length) || (nextY < 0) || (nextY >= map.size)))
                 break
-            else if (map[nextY][nextX] == '#') {
+            else if ((map[nextY][nextX] == '#') || ((nextX == obstacle.first) && (nextY == obstacle.second))) {
                 direction = when (direction) {
                     Direction.NORTH -> Direction.EAST
                     Direction.EAST -> Direction.SOUTH
