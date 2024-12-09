@@ -3,7 +3,8 @@ package at.gnu.adventofcode.year2024
 class Day09(compressedDiskMap: String) {
 
     private val uncompressedDiskMap =
-        compressedDiskMap.mapIndexed { i, c -> List(c.digitToInt()) { if ((i % 2) == 1) -1 else i / 2 } }.flatten()
+        compressedDiskMap.mapIndexed { i, c -> List(c.digitToInt()) { if ((i % 2) == 1) FREE else (i / 2) } }.flatten()
+
 
     fun part1(): Long =
         uncompressedDiskMap.packBlocks().checksum()
