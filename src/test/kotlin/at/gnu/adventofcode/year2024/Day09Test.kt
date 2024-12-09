@@ -7,7 +7,7 @@ import kotlin.time.measureTimedValue
 
 class Day09Test {
 
-    private val diskMap = "2333133121414131402"
+    private val compressedDiskMap = "2333133121414131402"
 
     private val test = mapOf(
         Day09::part1 to 1928L,
@@ -16,10 +16,10 @@ class Day09Test {
 
     @Test @ExperimentalTime
     fun testMySolution() {
-        val day09 = Day09(diskMap)
+        val day09 = Day09(compressedDiskMap)
         for (function in test.keys) {
             val (result, time) = measureTimedValue { function.invoke(day09) }
-            println("Day09::${function.name}: ${diskMap.length} blocks compressed -> $result [${time}]")
+            println("Day09::${function.name}: ${compressedDiskMap.length} compressed map size -> $result [${time}]")
             assertEquals(test[function], result)
         }
     }

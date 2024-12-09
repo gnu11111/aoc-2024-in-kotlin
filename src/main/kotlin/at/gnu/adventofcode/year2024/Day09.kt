@@ -1,57 +1,50 @@
 package at.gnu.adventofcode.year2024
 
-class Day09(input: String) {
+class Day09(compressedDiskMap: String) {
 
-    private val uncompress = input.uncompress()
+    private val uncompressedDiskMap =
+        compressedDiskMap.mapIndexed { i, c -> List(c.digitToInt()) { if ((i % 2) == 1) -1 else i / 2 } }.flatten()
 
     fun part1(): Long =
-        uncompress.defragment().checksum()
+        uncompressedDiskMap.packBlocks().checksum()
 
     fun part2(): Long =
-        uncompress.defragment2().checksum()
+        uncompressedDiskMap.packFiles().checksum()
 
-    private fun String.uncompress(): List<Int> =
-        mapIndexed { i, c ->
-            if ((i % 2) == 0)
-                List(c.digitToInt()) { i / 2 }
-            else
-                List(c.digitToInt()) { -1 }
-        }.flatten()
 
-    private fun List<Int>.defragment(): List<Int> {
-        val disk = this.toMutableList()
-        while (disk.isFragmented()) {
-            val moveFrom = disk.indexOfLast { it.isBlock() }
-            val moveTo = disk.indexOfFirst { it.isFree() }
-            disk[moveTo] = disk[moveFrom]
-            disk[moveFrom] = -1
+    private fun List<Int>.packBlocks(): List<Int> {
+        val diskMap = this.toMutableList()
+        while (diskMap.isFragmented()) {
+            val moveBlockFrom = diskMap.indexOfLast { it.isBlock() }
+            val moveBlockTo = diskMap.indexOfFirst { it.isFree() }
+            diskMap[moveBlockTo] = diskMap[moveBlockFrom]
+            diskMap[moveBlockFrom] = FREE
         }
-        return disk
+        return diskMap
     }
 
-    private fun List<Int>.defragment2(): List<Int> {
-        val disk = this.toMutableList()
-        val maxBlockId = disk.maxOrNull() ?: 0
+    private fun List<Int>.packFiles(): List<Int> {
+        val diskMap = this.toMutableList()
+        val maxBlockId = diskMap.maxOrNull() ?: 0
         for (blockId in maxBlockId downTo 0) {
-            val block = disk.mapIndexedNotNull { i, id -> if (id == blockId) i else null }
-            val freeSpace = disk.indexOfFreeSpace(block.size) ?: continue
-            if (freeSpace >= block.first())
+            val indexesOfFileToMove = diskMap.mapIndexedNotNull { i, id -> if (id == blockId) i else null }
+            val indexOfFreeSpace = diskMap.indexOfFreeSpace(indexesOfFileToMove.size)
+            if ((indexOfFreeSpace == null) || (indexOfFreeSpace >= indexesOfFileToMove.first()))
                 continue
-            for (j in block.indices) {
-                disk[freeSpace + j] = disk[block[j]]
-                disk[block[j]] = -1
+            for (j in indexesOfFileToMove.indices) {
+                diskMap[indexOfFreeSpace + j] = diskMap[indexesOfFileToMove[j]]
+                diskMap[indexesOfFileToMove[j]] = FREE
             }
-//            println(disk.joinToString(""))
         }
-        return disk
+        return diskMap
     }
 
     private fun List<Int>.indexOfFreeSpace(size: Int): Int? {
         var blockSize = 0
         for (i in indices) {
-            if (this[i] < 0) blockSize++ else blockSize = 0
+            if (this[i].isFree()) blockSize++ else blockSize = 0
             if (blockSize >= size)
-                return i - size + 1
+                return i - blockSize + 1
         }
         return null
     }
@@ -60,7 +53,7 @@ class Day09(input: String) {
         indexOfFirst { it.isFree() } < indexOfLast { it.isBlock() }
 
     private fun Int.isFree() =
-        this < 0
+        this == FREE
 
     private fun Int.isBlock() =
         this >= 0
@@ -70,6 +63,7 @@ class Day09(input: String) {
 
     companion object {
         const val RESOURCE = "/adventofcode/year2024/Day09.txt"
+        const val FREE = -1
     }
 }
 
