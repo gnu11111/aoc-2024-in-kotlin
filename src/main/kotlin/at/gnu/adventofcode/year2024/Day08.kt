@@ -19,27 +19,20 @@ class Day08(city: List<String>) {
         }
     }
 
-    fun part1(): Int {
-        val antinodes = createAllAntinodes()
-        return antinodes.size
-    }
+    fun part1(): Int =
+        createAllAntinodes().size
 
-    fun part2(): Int {
-        val antinodes = createAllAntinodes(harmonics = true)
-        return antinodes.size
-    }
+    fun part2(): Int =
+        createAllAntinodes(harmonics = true).size
 
-    private fun createAllAntinodes(harmonics: Boolean = false): MutableSet<Location> {
+    private fun createAllAntinodes(harmonics: Boolean = false): Set<Location> {
         val antinodes = mutableSetOf<Location>()
-        for ((_, locations) in antennas) {
-            for (i in locations.indices) {
-                for (j in i + 1 until locations.size) {
+        for ((_, locations) in antennas)
+            for (i in locations.indices)
+                for (j in (i + 1) until locations.size)
                     antinodes += createAntinodesFor(locations[i], locations[j], harmonics).filter {
-                        (it.x >= 0) && (it.x < width) && (it.y >= 0) && (it.y < height)
+                        (it.x in 0 until width) && (it.y in 0 until height)
                     }
-                }
-            }
-        }
         return antinodes
     }
 
