@@ -10,16 +10,16 @@ class Day10(private val map: List<String>) {
 
 
     fun part1(): Int =
-        heads.sumOf { it.countPaths().distinct().size }
+        heads.sumOf { it.paths().distinct().size }
 
     fun part2(): Int =
-        heads.sumOf { it.countPaths().size }
+        heads.sumOf { it.paths().size }
 
 
-    private fun Location.countPaths(height: Int = 0, ends: List<Location> = emptyList()): List<Location> =
+    private fun Location.paths(height: Int = 0, ends: List<Location> = emptyList()): List<Location> =
         when {
             (height == 9) -> ends + this
-            else -> neighbors(height + 1).fold(emptyList()) { acc, it -> acc + it.countPaths(height + 1, ends) }
+            else -> neighbors(height + 1).fold(emptyList()) { acc, it -> acc + it.paths(height + 1, ends) }
         }
 
     private fun Location.neighbors(height: Int): List<Location> {
