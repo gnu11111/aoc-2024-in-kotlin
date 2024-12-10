@@ -33,6 +33,11 @@
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-core</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-reload4j</artifactId>
             <version>${slf4j.version}</version>
@@ -45,6 +50,11 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-stdlib</artifactId>
                 <version>${kotlin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlinx</groupId>
+                <artifactId>kotlinx-coroutines-core</artifactId>
+                <version>1.9.0</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -105,6 +115,11 @@
                                 <artifactItem>
                                     <groupId>org.jetbrains.kotlin</groupId>
                                     <artifactId>kotlin-stdlib</artifactId>
+                                    <overWrite>true</overWrite>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jetbrains.kotlinx</groupId>
+                                    <artifactId>kotlinx-coroutines-core</artifactId>
                                     <overWrite>true</overWrite>
                                 </artifactItem>
                                 <artifactItem>

@@ -1,5 +1,6 @@
 package at.gnu.adventofcode.year2024
 
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import kotlin.time.ExperimentalTime
@@ -19,7 +20,7 @@ class Day10Test {
     fun testMySolution() {
         val day10 = Day10(map)
         for (function in test.keys) {
-            val (result, time) = measureTimedValue { function.invoke(day10) }
+            val (result, time) = measureTimedValue { runBlocking { function.invoke(day10) } }
             println("Day10::${function.name}: ${map.size}x${map.first().length} map -> $result [${time}]")
             assertEquals(test[function], result)
         }
