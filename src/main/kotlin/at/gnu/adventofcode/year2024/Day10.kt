@@ -1,8 +1,5 @@
 package at.gnu.adventofcode.year2024
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-
 class Day10(private val map: List<String>) {
 
     data class Location(val x: Int, val y: Int)
@@ -12,17 +9,17 @@ class Day10(private val map: List<String>) {
     }
 
 
-    suspend fun part1(): Int =
-        coroutineScope { heads.sumOf { async { it.paths().distinct().size }.await() } }
+    fun part1(): Int =
+        heads.sumOf { it.paths().distinct().size }
 
-    suspend fun part2(): Int =
-        coroutineScope { heads.sumOf { async { it.paths().size }.await() } }
+    fun part2(): Int =
+        heads.sumOf { it.paths().size }
 
 
-    private fun Location.paths(height: Int = 0, ends: List<Location> = emptyList()): List<Location> =
+    private fun Location.paths(height: Int = 0): List<Location> =
         when {
-            (height == 9) -> ends + this
-            else -> neighbors(height + 1).fold(emptyList()) { acc, it -> acc + it.paths(height + 1, ends) }
+            (height == 9) -> listOf(this)
+            else -> neighbors(height + 1).fold(emptyList()) { acc, it -> acc + it.paths(height + 1) }
         }
 
     private fun Location.neighbors(height: Int): List<Location> {
@@ -42,7 +39,7 @@ class Day10(private val map: List<String>) {
     }
 }
 
-suspend fun main() {
+fun main() {
     val day10 = Day10(Day10::class.java.getResource(Day10.RESOURCE)!!.readText().trim().split("\n", "\r\n"))
     println("Day10::part1 -> ${day10.part1()}")
     println("Day10::part2 -> ${day10.part2()}")
