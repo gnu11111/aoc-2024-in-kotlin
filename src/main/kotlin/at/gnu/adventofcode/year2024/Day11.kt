@@ -5,14 +5,14 @@ import kotlin.math.pow
 class Day11(private val numbers: List<Long>) {
 
     fun part1(): Long =
-        numbers.iterate(iterations = 25)
+        countStones(numbers, blinks = 25)
 
     fun part2(): Long =
-        numbers.iterate(iterations = 75)
+        countStones(numbers, blinks = 75)
 
 
-    private fun List<Long>.iterate(iterations: Int = 25): Long =
-        sumOf { dfs(number = it, max = iterations, memo = (1..iterations).associateWith { mutableMapOf() }) }
+    private fun countStones(numbers: List<Long>, blinks: Int = 25): Long =
+        numbers.sumOf { dfs(number = it, max = blinks, memo = (1..blinks).associateWith { mutableMapOf() }) }
 
     private fun dfs(number: Long, i: Int = 1, max: Int = 25, memo: Map<Int, MutableMap<Long, Long>>): Long =
         if (i > max)
