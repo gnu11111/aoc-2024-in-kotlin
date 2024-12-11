@@ -18,9 +18,8 @@ class Day11(private val numbers: List<Long>) {
         if (i > max)
             1L
         else {
-            val length = number.toString().length
-            val cache = memo[i]!!
-            cache.getOrPut(number) {
+            memo[i]!!.getOrPut(number) {
+                val length = number.toString().length
                 when {
                     (number == 0L) -> dfs(1L, i + 1, max, memo)
                     ((length % 2) == 0) -> {
