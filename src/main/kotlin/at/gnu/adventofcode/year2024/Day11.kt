@@ -17,7 +17,7 @@ class Day11(private val numbers: List<Long>) {
     private fun dfs(number: Long, i: Int = 1, max: Int = 25, memo: Map<Int, MutableMap<Long, Long>>): Long =
         if (i > max)
             1L
-        else {
+        else
             memo[i]!!.getOrPut(number) {
                 val length = number.toString().length
                 when {
@@ -29,7 +29,6 @@ class Day11(private val numbers: List<Long>) {
                     else -> dfs(number * 2024L, i + 1, max, memo)
                 }
             }
-        }
 
     companion object {
         const val RESOURCE = "/adventofcode/year2024/Day11.txt"
