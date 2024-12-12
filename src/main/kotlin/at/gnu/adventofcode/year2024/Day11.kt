@@ -12,13 +12,13 @@ class Day11(private val numbers: List<Long>) {
 
 
     private fun countStones(numbers: List<Long>, blinks: Int = 25): Long =
-        numbers.sumOf { dfs(number = it, max = blinks, memo = (1..blinks).associateWith { mutableMapOf() }) }
+        numbers.sumOf { dfs(number = it, max = blinks) }
 
-    private fun dfs(number: Long, i: Int = 1, max: Int = 25, memo: Map<Int, MutableMap<Long, Long>>): Long =
+    private fun dfs(number: Long, i: Int = 1, max: Int = 25, memo: MutableMap<String, Long> = mutableMapOf()): Long =
         if (i > max)
             1L
         else
-            memo[i]!!.getOrPut(number) {
+            memo.getOrPut("$i:$number") {
                 val length = number.toString().length
                 when {
                     (number == 0L) -> dfs(1L, i + 1, max, memo)
