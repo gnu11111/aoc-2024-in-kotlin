@@ -27,7 +27,7 @@ class Day12(private val garden: List<String>) {
                 val startPlot = Plot(x, y)
                 if (startPlot in allVisited)
                     continue
-                val visited = getRegion(startPlot, plantAt(startPlot))
+                val visited = fillRegion(startPlot, plantAt(startPlot))
                 if (visited.isNotEmpty()) {
                     allVisited.addAll(visited)
                     regions[startPlot] = visited
@@ -36,14 +36,14 @@ class Day12(private val garden: List<String>) {
         return regions
     }
 
-    private fun getRegion(plot: Plot, plant: Char, visited: Set<Plot> = emptySet()): Set<Plot> {
+    private fun fillRegion(plot: Plot, plant: Char, visited: Set<Plot> = emptySet()): Set<Plot> {
         if ((plot in visited) || (plantAt(plot) != plant))
             return visited
         val newVisited = (visited + plot).toMutableSet()
-        newVisited += getRegion(Plot(plot.x + 1, plot.y), plant, newVisited)
-        newVisited += getRegion(Plot(plot.x - 1, plot.y), plant, newVisited)
-        newVisited += getRegion(Plot(plot.x, plot.y + 1), plant, newVisited)
-        newVisited += getRegion(Plot(plot.x, plot.y - 1), plant, newVisited)
+        newVisited += fillRegion(Plot(plot.x + 1, plot.y), plant, newVisited)
+        newVisited += fillRegion(Plot(plot.x - 1, plot.y), plant, newVisited)
+        newVisited += fillRegion(Plot(plot.x, plot.y + 1), plant, newVisited)
+        newVisited += fillRegion(Plot(plot.x, plot.y - 1), plant, newVisited)
         return newVisited
     }
 
