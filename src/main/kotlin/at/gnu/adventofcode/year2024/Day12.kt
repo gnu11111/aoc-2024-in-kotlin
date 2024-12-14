@@ -2,84 +2,72 @@ package at.gnu.adventofcode.year2024
 
 class Day12(private val garden: List<String>) {
 
-    data class Location(val x: Int, val y: Int)
+    data class Plot(val x: Int, val y: Int)
 
-    fun part1(): Int {
-        val regions = findRegions()
-        var price = 0
-        for ((location, region) in regions) {
-            val plant = plantAt(location.x, location.y)
-            var fences = region.size * 4
-            for (plot in region)
-                fences -= countNeighbors(plot.x, plot.y, plant)
-            price += (fences * region.size)
+    fun part1(): Int =
+        findRegions().entries.sumOf { (startPlot, region) ->
+            val plant = plantAt(startPlot)
+            val fences = (region.size * 4) - region.sumOf { plot -> countNeighbors(plot, plant) }
+            (fences * region.size)
         }
-        return price
-    }
 
-    fun part2(): Int {
-        val regions = findRegions()
-        var price = 0
-        for ((location, region) in regions) {
-            val plant = plantAt(location.x, location.y)
+    fun part2(): Int =
+        findRegions().entries.sumOf { (startPlot, region) ->
+            val plant = plantAt(startPlot)
             val corners = countCorners(plant, region)
-            price += (corners * region.size)
+            (corners * region.size)
         }
-        return price
-    }
 
 
-    private fun findRegions(): MutableMap<Location, Set<Location>> {
-        val regions = mutableMapOf<Location, Set<Location>>()
-        val allVisited = mutableSetOf<Location>()
+    private fun findRegions(): MutableMap<Plot, Set<Plot>> {
+        val regions = mutableMapOf<Plot, Set<Plot>>()
+        val allVisited = mutableSetOf<Plot>()
         for (y in garden.indices)
             for (x in garden[y].indices) {
-                val location = Location(x, y)
-                if (location in allVisited)
+                val startPlot = Plot(x, y)
+                if (startPlot in allVisited)
                     continue
-                val visited = getRegion(location, plantAt(x, y))
+                val visited = getRegion(startPlot, plantAt(startPlot))
                 if (visited.isNotEmpty()) {
                     allVisited.addAll(visited)
-                    regions[location] = visited
+                    regions[startPlot] = visited
                 }
             }
         return regions
     }
 
-    private fun getRegion(location: Location, plant: Char, visited: Set<Location> = emptySet()): Set<Location> {
-        if ((location in visited) || (plantAt(location.x, location.y) != plant))
+    private fun getRegion(plot: Plot, plant: Char, visited: Set<Plot> = emptySet()): Set<Plot> {
+        if ((plot in visited) || (plantAt(plot) != plant))
             return visited
-        val newVisited = (visited + location).toMutableSet()
-        newVisited += getRegion(Location(location.x + 1, location.y), plant, newVisited)
-        newVisited += getRegion(Location(location.x - 1, location.y), plant, newVisited)
-        newVisited += getRegion(Location(location.x, location.y + 1), plant, newVisited)
-        newVisited += getRegion(Location(location.x, location.y - 1), plant, newVisited)
+        val newVisited = (visited + plot).toMutableSet()
+        newVisited += getRegion(Plot(plot.x + 1, plot.y), plant, newVisited)
+        newVisited += getRegion(Plot(plot.x - 1, plot.y), plant, newVisited)
+        newVisited += getRegion(Plot(plot.x, plot.y + 1), plant, newVisited)
+        newVisited += getRegion(Plot(plot.x, plot.y - 1), plant, newVisited)
         return newVisited
     }
 
-    private fun countNeighbors(x: Int, y: Int, c: Char): Int =
-        (if (plantAt(x + 1, y) == c) 1 else 0) +
-                (if (plantAt(x - 1, y) == c) 1 else 0) +
-                (if (plantAt(x, y + 1) == c) 1 else 0) +
-                (if (plantAt(x, y - 1) == c) 1 else 0)
+    private fun countNeighbors(plot: Plot, c: Char): Int =
+        (if (plantAt(Plot(plot.x + 1, plot.y)) == c) 1 else 0) +
+                (if (plantAt(Plot(plot.x - 1, plot.y)) == c) 1 else 0) +
+                (if (plantAt(Plot(plot.x, plot.y + 1)) == c) 1 else 0) +
+                (if (plantAt(Plot(plot.x, plot.y - 1)) == c) 1 else 0)
 
-    private fun countCorners(plant: Char, region: Set<Location>): Int =
-        region.sumOf { location ->
-            val x = location.x
-            val y = location.y
+    private fun countCorners(plant: Char, region: Set<Plot>): Int =
+        region.sumOf { plot ->
             var count = 0
             for ((dir1, dir2) in listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1, 1 to 0).zipWithNext()) {
-                val adjacent1 = plantAt(x + dir1.first, y + dir1.second)
-                val adjacent2 = plantAt(x + dir2.first, y + dir2.second)
-                val diagonal = plantAt(x + dir1.first + dir2.first, y + dir1.second + dir2.second)
+                val adjacent1 = plantAt(Plot(plot.x + dir1.first, plot.y + dir1.second))
+                val adjacent2 = plantAt(Plot(plot.x + dir2.first, plot.y + dir2.second))
+                val diagonal = plantAt(Plot(plot.x + dir1.first + dir2.first, plot.y + dir1.second + dir2.second))
                 if ((plant != adjacent1) && (plant != adjacent2)) count++
                 if ((plant == adjacent1) && (plant == adjacent2) && (plant != diagonal)) count++
             }
             count
         }
 
-    private fun plantAt(x: Int, y: Int): Char =
-        garden.getOrNull(y)?.getOrNull(x) ?: ' '
+    private fun plantAt(plot: Plot): Char =
+        garden.getOrNull(plot.y)?.getOrNull(plot.x) ?: ' '
 
     companion object {
         const val RESOURCE = "/adventofcode/year2024/Day12.txt"
