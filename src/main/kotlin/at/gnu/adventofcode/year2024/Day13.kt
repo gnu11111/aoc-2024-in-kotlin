@@ -12,26 +12,13 @@ class Day13(rules: List<List<String>>) {
         Rule(ax, ay, bx, by, px, py)
     }
 
-    /*
-    x * 94 + y * 22 = 8400     -> y = (8400 - x * 94) / 22
-    x * 34 + y * 67 = 5400     -> x * 34 + ((8400 - x * 94) / 22) * 67 = 5400
-                                  x * 34 / 67 + ((8400 - x * 94) / 22) = 5400 / 67
-                                  22 * x * 34 / 67 + 8400 - x * 94 = 22 * 5400 / 67
-                                  (22 * 34 * x - 94 * 67 * x) + 67 * 8400 = 22 * 5400
-                                  (22 * 34 - 94 * 67) * x = 22 * 5400 - 67 * 8400
-                                  (bx * ay - ax * by) * x = bx * py - by * px
-                                  a = (by * px - bx * py) / (ax * by - bx * ay)
-                                  -5550 * x = 118800 - 562000
-                                  -5550 * x = -444000
-                                  a = 80
-                                  b = (8400 - 80 * 94) / 22 = (8400 - 7520) / 22 = 880 / 22 = 40
-                                  b = (px - a * ax) / bx
-    */
+
     fun part1(): Long =
         rules.sumOf(::calculatePrize)
 
     fun part2(): Long =
         rules.sumOf { calculatePrize(it, additionalPrize = 10000000000000L) }
+
 
     private fun calculatePrize(rule: Rule, additionalPrize: Long = 0L): Long {
         val px = rule.px + additionalPrize

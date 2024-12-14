@@ -35,7 +35,7 @@ class Day13Test {
         val day13 = Day13(rules)
         for (function in test.keys) {
             val (result, time) = measureTimedValue { function(day13) }
-            println("Day13::${function.name}: ${rules.size} entries -> $result [$time]")
+            println("Day13::${function.name}: ${rules.size} rules -> $result [$time]")
             assertEquals(test[function], result)
         }
     }
