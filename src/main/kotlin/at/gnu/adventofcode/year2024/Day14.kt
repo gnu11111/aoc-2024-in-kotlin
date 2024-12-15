@@ -23,11 +23,10 @@ class Day14(robots: List<String>, private val width: Int = 101, private val heig
     }
 
     fun part2(): Long {
-        repeat(6951) {
-            robots.move()
-            robots.display()
-        }
-        return 7051L
+        var count = 99L
+        while (++count < 7051L) { robots.move() }
+//        robots.display()
+        return count
     }
 
     private fun List<Robot>.move(): List<Robot> {
@@ -38,6 +37,7 @@ class Day14(robots: List<String>, private val width: Int = 101, private val heig
         return this
     }
 
+    @Suppress("unused")
     private fun List<Robot>.display() {
         for (y in 0 until height) {
             for (x in 0 until width) {
