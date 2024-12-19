@@ -81,7 +81,7 @@ class Day17(registers: List<String>, program: String) {
     class Adv(private val operand: Int) : Instruction({ state ->
         val combo = operand.combo(state)
         val value = (state.a shr combo.toInt())
-        debug("Adv($operand) -> A = ${state.a} >> $combo = $value")
+        debug("Adv($operand) -> A = ${state.a} / 2^$combo = $value")
         State(value, state.b, state.c, state.ip + 2, state.output)
     })
 
@@ -124,14 +124,14 @@ class Day17(registers: List<String>, program: String) {
     class Bdv(private val operand: Int) : Instruction({ state ->
         val combo = operand.combo(state)
         val value = (state.a shr combo.toInt())
-        debug("Bdv($operand) -> B = ${state.a} >> $combo = $value")
+        debug("Bdv($operand) -> B = ${state.a} / 2^$combo = $value")
         State(state.a, value, state.c, state.ip + 2, state.output)
     })
 
     class Cdv(private val operand: Int) : Instruction({ state ->
         val combo = operand.combo(state)
         val value = (state.a shr combo.toInt())
-        debug("Cdv($operand) -> C = ${state.a} >> $combo = $value")
+        debug("Cdv($operand) -> C = ${state.a} / 2^$combo = $value")
         State(state.a, state.b, value, state.ip + 2, state.output)
     })
 
